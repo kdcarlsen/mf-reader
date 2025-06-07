@@ -35,7 +35,7 @@ class PresetSelector extends Component {
     prev = () => {
         const n = this.props.state.preset_number - 1;
         // this.setPreset(n < 0 ? '255' : n.toString());
-        this.props.state.setPresetNumber(n < 0 ? 255 : n);
+        this.props.state.setPresetNumber(n < 0 ? 511 : n);
         if (this.props.state.send_pc) {
             this.go();
         }
@@ -43,7 +43,7 @@ class PresetSelector extends Component {
 
     next = () => {
         const n = this.props.state.preset_number + 1;
-        this.props.state.setPresetNumber(n > 255 ? 0 : n);
+        this.props.state.setPresetNumber(n > 511 ? 0 : n);
         if (this.props.state.send_pc) {
             this.go();
         }
@@ -73,7 +73,7 @@ class PresetSelector extends Component {
         }
     };
 
-    readAll = async (from=0, to=255, unread_only=false) => {
+    readAll = async (from=0, to=511, unread_only=false) => {
 
         if (!this.props.state.hasInputAndOutputEnabled()) {
             if (global.dev) console.log("readAllPresets: no output and/or input connected, ignore request");
@@ -105,19 +105,15 @@ class PresetSelector extends Component {
         this.setState({abort_all: false});
     };
 
-    read1To256 = () => {
-        this.readAll(0, 255, this.state.unread);
+    read1To512 = () => {
+        this.readAll(0, 511, this.state.unread);
     };
 
-    readNTo256 = () => {
-        this.readAll((this.props.state.preset_number + 1) % 256, 255, this.state.unread);
+    readNTo512 = () => {
+        this.readAll((this.props.state.preset_number + 1) % 512, 512, this.state.unread);
     };
 
-/*
-    read128To256 = () => {
-        this.readAll(127, 255, this.state.unread);
-    };
-*/
+
 
     abortAll = () => {
         this.setState({abort_all: true});
@@ -187,7 +183,7 @@ class PresetSelector extends Component {
 
         const pc = [];
         const plength = S.presets.length;
-        for (let i=0; i<256; i++) {
+        for (let i=0; i<512; i++) {
             let classname = i === S.preset_number ? 'sel' : '';
             if (plength && (plength > i && S.presets[i])) {
                 classname += ' loaded';
@@ -196,7 +192,7 @@ class PresetSelector extends Component {
         }
 
         let preset_to = S.preset_number + 2;
-        if (preset_to > 256) preset_to = 1;
+        if (preset_to > 512) preset_to = 1;
 
         return (
             <div className={`preset-selector ${midi_ok?'midi-ok':'midi-ko'}`}>
@@ -216,7 +212,7 @@ class PresetSelector extends Component {
                     <a href={"?list=1"} target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faPrint}/></a>
                 </div>
                 <div className="seq-access">
-                    <input type="text" id="preset" name="preset" min="1" max="256" value={S.preset_number_string} onChange={this.change} />
+                    <input type="text" id="preset" name="preset" min="1" max="512" value={S.preset_number_string} onChange={this.change} />
                     <button onClick={this.prev} title="Previous">&lt;</button>
                     <button onClick={this.next} title="Next">&gt;</button>
                     <button onClick={this.toggleDirectAccess} title="Choose the preset number then send a PC message to the MF.">#...</button>
@@ -226,8 +222,8 @@ class PresetSelector extends Component {
                 </div>
                 <div className="actions">
                     <button className={midi_ok ? "button-midi read-button ok" : "button-midi read-button"} type="button" onClick={this.readSelected}>READ preset #{S.preset_number_string}</button>
-                    {!this.state.reading_all && <button className="button-midi" onClick={this.read1To256} title="Read all">Read all</button>}
-                    {/*{!this.state.reading_all && <button className="button-midi" onClick={this.readNTo256} title="Read all">Read {preset_to}..256</button>}*/}
+                    {!this.state.reading_all && <button className="button-midi" onClick={this.read1To512} title="Read all">Read all</button>}
+                    {/*{!this.state.reading_all && <button className="button-midi" onClick={this.readNTo512} title="Read all">Read {preset_to}..512</button>}*/}
                     {this.state.reading_all && <button className="button-midi abort" onClick={this.abortAll} title="Stop reading all">{this.state.abort_all ? "Stopping..." : "STOP"}</button>}
                     <label title="Only read unread presets" className="no-bold"><input type="checkbox" checked={this.state.unread} onChange={this.toggleUnread}/>only unread</label>
                 </div>

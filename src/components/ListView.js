@@ -17,7 +17,7 @@ class ListView extends Component {
 
         let num_presets = 0;
         const presets = [];
-        for (let i=0; i<256; i++) {
+        for (let i=0; i<512; i++) {
             if (S.presetExists(i)) {
                 num_presets++;
                 const v = S.controlValue(control, true, i);

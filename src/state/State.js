@@ -40,7 +40,7 @@ class State {
     // All the presets
     // This is an array of {name: String; data: []}
     // We prefill the array with null value to avoid OutOfBound exceptions when accessing the array with MobX
-    presets = new Array(256).fill(null);   // index 0..255
+    presets = new Array(512).fill(null);   // index 0..511
 
     // filename = null;    // presets file
 
@@ -241,9 +241,9 @@ class State {
 
         if (isNaN(num)) {
             num = 1;
-        } else if (num > 256) {
-            s = '256';
-            num = 256;
+        } else if (num > 512) {
+            s = '512';
+            num = 512;
         } else if (num < 1) {
             s = '1';
             num = 1;

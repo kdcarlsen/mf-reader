@@ -132,7 +132,7 @@ class PresetsGrid extends Component {
         const S = this.props.state;
 
         const pc = [];
-        for (let i=0; i<256; i++) {
+        for (let i=0; i<512; i++) {
 
             let classname = i === S.preset_number ? 'sel' : '';
             if (S.presets.length && (S.presets.length > i && S.presets[i])) {
